@@ -1,33 +1,40 @@
 services:
   web:
     image: triangle-pos:latest
+    container_name: trianglepos
     build:
       context: .
     env_file:
       - .env
-    ports:
-      - "8000:8000"
+    networks:
+      - nginxproxy
+      - laravel
     volumes:
       - .:/var/www/html
     depends_on:
       - db
 
   db:
-    platform: "linux/amd64"
-    image: mysql:latest
+    image: postgres:14-alpine
+    restart: unless-stopped
     env_file:
       - .env
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "3306:3306"
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - laravel
     volumes:
-      - dbdata:/var/lib/mysql
+      - dbdata:/var/lib/postgresql/data
 
 volumes:
   dbdata:
+
+networks:
+  nginxproxy:
+    external: true
+  laravel:
+    driver: bridge
 
 
