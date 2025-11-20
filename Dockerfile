@@ -1,9 +1,19 @@
-FROM php:8.1
+FROM php:8.1-fpm-bullseye
+
 
 WORKDIR /app
 
 # Install system dependencies and PHP extensions
 RUN apt-get update && apt-get install -y \
+
+
+    wkhtmltopdf \
+    libxrender1 \
+    libxext6 \
+    libfontconfig1 \
+
+
+
     libzip-dev \
     libpq-dev \
     libpng-dev \
@@ -12,6 +22,7 @@ RUN apt-get update && apt-get install -y \
     libwebp-dev \
     zip \
     git \
+   
   && docker-php-ext-install zip pdo pdo_mysql pdo_pgsql \
   && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
   && docker-php-ext-install gd \
@@ -19,7 +30,6 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-install exif && docker-php-ext-enable exif
-
 
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php -- \
