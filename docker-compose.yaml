@@ -1,13 +1,29 @@
 services:
-  web:
-    image: triangle-pos:latest
+  nginx:
+    image: nginx:latest
     container_name: trianglepos
+    expose:
+      - 80
+    tty: true
+    volumes:
+      - ./:/var/www/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    depends_on:
+      - web
+    networks:
+      - nginxproxy
+      - laravel
+
+  web:
     build:
       context: .
+    container_name: web
+    expose:
+     - 9000
     env_file:
       - .env
     networks:
-      - nginxproxy
       - laravel
     volumes:
       - .:/var/www/html
