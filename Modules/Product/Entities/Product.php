@@ -18,6 +18,11 @@ class Product extends Model implements HasMedia
 
     protected $with = ['media'];
 
+    protected static function newFactory()
+    {
+        return \Modules\Product\Database\factories\ProductFactory::new();
+    }
+
     public function category() {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }

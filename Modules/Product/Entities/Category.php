@@ -11,6 +11,11 @@ class Category extends Model
 
     protected $guarded = [];
 
+    protected static function newFactory()
+    {
+        return \Modules\Product\Database\factories\CategoryFactory::new();
+    }
+
     public function products() {
         return $this->hasMany(Product::class, 'category_id', 'id');
     }
