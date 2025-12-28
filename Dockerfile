@@ -1,7 +1,7 @@
 FROM php:8.1-fpm-bullseye
 
 
-WORKDIR /app
+WORKDIR /var/www/html
 
 # Install system dependencies and PHP extensions
 RUN apt-get update && apt-get install -y \
@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
     libwebp-dev \
     zip \
     git \
-   
+
   && docker-php-ext-install zip pdo pdo_mysql pdo_pgsql \
   && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
   && docker-php-ext-install gd \
@@ -39,12 +39,12 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 RUN composer --version
 
 # Copy application files
-COPY . /app
+#COPY . /app
 
 # Install dependencies
-RUN composer install --ignore-platform-reqs --no-interaction --prefer-dist --optimize-autoloader
+#RUN composer install --ignore-platform-reqs --no-interaction --prefer-dist --optimize-autoloader
 
 # Make sure startup script is executable
-RUN chmod +x /app/docker-startup.sh
+#RUN chmod +x /app/docker-startup.sh
 
-ENTRYPOINT ["/app/docker-startup.sh"]
+#ENTRYPOINT ["/app/docker-startup.sh"]
