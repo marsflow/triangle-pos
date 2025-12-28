@@ -55,7 +55,8 @@ class User extends Authenticatable implements HasMedia
             ->useFallbackUrl('https://www.gravatar.com/avatar/' . md5("test@mail.com"));
     }
 
-    public function scopeIsActive(Builder $builder) {
+    public function scopeIsActive(Builder $builder)
+    {
         return $builder->where('is_active', 1);
     }
 }

@@ -14,21 +14,24 @@ use Modules\Upload\Entities\Upload;
 
 class UsersController extends Controller
 {
-    public function index(UsersDataTable $dataTable) {
+    public function index(UsersDataTable $dataTable)
+    {
         abort_if(Gate::denies('access_user_management'), 403);
 
         return $dataTable->render('user::users.index');
     }
 
 
-    public function create() {
+    public function create()
+    {
         abort_if(Gate::denies('access_user_management'), 403);
 
         return view('user::users.create');
     }
 
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         abort_if(Gate::denies('access_user_management'), 403);
 
         $request->validate([
@@ -50,9 +53,9 @@ class UsersController extends Controller
             $tempFile = Upload::where('folder', $request->image)->first();
 
             if ($tempFile) {
-                $user->addMedia(Storage::path('public/temp/' . $request->image . '/' . $tempFile->filename))->toMediaCollection('avatars');
+                $user->addMedia(Storage::path('temp/' . $request->image . '/' . $tempFile->filename))->toMediaCollection('avatars');
 
-                Storage::deleteDirectory('public/temp/' . $request->image);
+                Storage::deleteDirectory('temp/' . $request->image);
                 $tempFile->delete();
             }
         }
@@ -63,19 +66,21 @@ class UsersController extends Controller
     }
 
 
-    public function edit(User $user) {
+    public function edit(User $user)
+    {
         abort_if(Gate::denies('access_user_management'), 403);
 
         return view('user::users.edit', compact('user'));
     }
 
 
-    public function update(Request $request, User $user) {
+    public function update(Request $request, User $user)
+    {
         abort_if(Gate::denies('access_user_management'), 403);
 
         $request->validate([
             'name'     => 'required|string|max:255',
-            'email'    => 'required|email|max:255|unique:users,email,'.$user->id,
+            'email'    => 'required|email|max:255|unique:users,email,' . $user->id,
         ]);
 
         $user->update([
@@ -94,9 +99,9 @@ class UsersController extends Controller
             }
 
             if ($tempFile) {
-                $user->addMedia(Storage::path('public/temp/' . $request->image . '/' . $tempFile->filename))->toMediaCollection('avatars');
+                $user->addMedia(Storage::path('temp/' . $request->image . '/' . $tempFile->filename))->toMediaCollection('avatars');
 
-                Storage::deleteDirectory('public/temp/' . $request->image);
+                Storage::deleteDirectory('temp/' . $request->image);
                 $tempFile->delete();
             }
         }
@@ -107,7 +112,8 @@ class UsersController extends Controller
     }
 
 
-    public function destroy(User $user) {
+    public function destroy(User $user)
+    {
         abort_if(Gate::denies('access_user_management'), 403);
 
         $user->delete();
