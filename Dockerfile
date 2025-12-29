@@ -7,21 +7,21 @@ WORKDIR /var/www/html
 RUN apt-get update && apt-get install -y \
 
 
-    wkhtmltopdf \
-    libxrender1 \
-    libxext6 \
-    libfontconfig1 \
+  wkhtmltopdf \
+  libxrender1 \
+  libxext6 \
+  libfontconfig1 \
 
 
 
-    libzip-dev \
-    libpq-dev \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libwebp-dev \
-    zip \
-    git \
+  libzip-dev \
+  libpq-dev \
+  libpng-dev \
+  libjpeg-dev \
+  libfreetype6-dev \
+  libwebp-dev \
+  zip \
+  git \
 
   && docker-php-ext-install zip pdo pdo_mysql pdo_pgsql \
   && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
@@ -33,18 +33,18 @@ RUN docker-php-ext-install exif && docker-php-ext-enable exif
 
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php -- \
-    --install-dir=/usr/local/bin --filename=composer
+  --install-dir=/usr/local/bin --filename=composer
 
 # Verify Composer
 RUN composer --version
 
 # Copy application files
-#COPY . /app
+COPY . .
 
 # Install dependencies
-#RUN composer install --ignore-platform-reqs --no-interaction --prefer-dist --optimize-autoloader
+RUN composer install --ignore-platform-reqs --no-interaction --prefer-dist --optimize-autoloader
 
 # Make sure startup script is executable
-#RUN chmod +x /app/docker-startup.sh
+RUN chmod +x docker-startup.sh
 
-#ENTRYPOINT ["/app/docker-startup.sh"]
+ENTRYPOINT ["./docker-startup.sh"]
